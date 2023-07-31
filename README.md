@@ -43,6 +43,7 @@ code examples.ipynb
 TODOs:
 - Return a formatted sentence back to the user, not a pd.DataFrame
 - Turn on pyre
+- Concurrently handle requests
 
 ### v1.1: Single table, complex questions
 - Class detects obvious mistakes in the query and fixes them automatically
