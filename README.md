@@ -1,4 +1,4 @@
-# QueryChatbot
+# QueryBot
 
 A playground for leveraging GPT to answer user prompts using various databases.
 
@@ -56,3 +56,7 @@ TODOs:
 
 ### v1.4: New databases and LLM integrations
 - Class can handle various SQL and NoSQL database connections at the same time
+
+
+### Backlog:
+- Answer open-ended questions like "What products do my customers enjoy most?"
