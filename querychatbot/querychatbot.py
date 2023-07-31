@@ -1,28 +1,35 @@
 import os
 import openai
 from typing import List, Optional
+import pandas as pd
 
 
 class QueryChatBot:
     """
     Summary: Asks OpenAI's gpt-3.5-turbo to answer a list of questions using some reference data.
 
+    :param any engine: The SQL engine to use for our query (TODO: make type more specific)
     :param str table_schema: A dict of column names and descriptions to use when answering the question.
     :param list questions: A list of questions we want GPT to answer
     :return: A list of answers, one for each of the user's questions
     """
 
     def __new__(
-        cls, table_schema: Optional[str] = None, questions: Optional[List[str]] = None
+        cls,
+        engine: any,
+        table_schema: Optional[str] = None,
+        questions: Optional[List[str]] = None,
     ):
         """Allow this class to be called like a function, or instantiated like a class"""
         instance = super().__new__(cls)
-        if not table_schema and not questions:
+        if not engine and not table_schema and not questions:
             return instance
         else:
-            return instance(table_schema, questions)
+            return instance(engine, table_schema, questions)
 
-    def __call__(self, table_schema: str, questions: List[str]) -> List[str]:
+    def __call__(
+        self, engine: any, table_schema: str, questions: List[str]
+    ) -> List[str]:
         """Our main function: return a list of answers to a list of questions about some given input text"""
 
         assert isinstance(
@@ -33,15 +40,30 @@ class QueryChatBot:
 
         self._set_openai_api_key()
 
-        output = []
+        queries = []
         for question in questions:
-
             assert isinstance(
                 question, str
-            ), f"Question list is of the wrong type; expected str but got {type(questions).__name__}"            response = self._query_gpt(table_schema, question)
-            output.append(response)
+            ), f"Question list is of the wrong type; expected str but got {type(questions).__name__}"
+            response = self._query_gpt(table_schema, question)
+            queries.append(response)
+
+        output = []
+        for query in queries:
+            if "out of scope" in query.lower():
+                output.append(query)
+            else:
+                result = self._query_db(engine=engine, query_text=query)
+                output.append(result)
 
         return output
+
+    def _query_db(self, engine, query_text):
+        """Query the engine object and return a pd.Dataframe"""
+        results = engine.execute(query_text)
+        df = pd.DataFrame(results.fetchall())
+        df.columns = results.keys()
+        return df
 
     def _set_openai_api_key(self) -> None:
         """Set the OpenAI API key for use in the session."""
@@ -54,7 +76,7 @@ class QueryChatBot:
         return f"""
         Write a SQL query to answer the following question: {question}
 
-        Your query should only leverage the following SQL table: {table_schema}
+        Your query should only leverage the following tables and columns in this schema: {table_schema}
 
         You should only return a query if you are extremely confident that your query will answer the user's question. If you aren't extremely confident, just write back "out of scope".
         """
