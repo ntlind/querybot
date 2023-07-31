@@ -2,6 +2,30 @@
 
 A system for writing SQL and NoSQL queries to answer user prompts.
 
+# Getting started
+
+Be sure you have pg installed and that the service is currently running on port 5432
+
+```
+brew install postgresql
+```
+
+Install necessary python packages
+
+```
+pip install -r requirements.text
+```
+
+Start postgres
+
+```
+brew services start postgresql
+```
+
+Initialize mock database
+```
+```
+
 ## Roadmap
 
 ### v1: Single table, simple questions

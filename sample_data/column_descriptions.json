@@ -1,0 +1,9 @@
+{
+    "dept_id": "The department of the store where the sale occured",
+    "cat_id": "The category of the product that was purchased",
+    "item_id": "The SKU of the product that was purchased.",
+    "state_id": "The state where the purchase occured",
+    "store_id": "The store where the purchase occured",
+    "datetime": "The date of purchase",
+    "sales": "The purchase amount"
+}
