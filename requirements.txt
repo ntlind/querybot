@@ -1,0 +1,3 @@
+openai
+typing
+python-dotenv
