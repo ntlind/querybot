@@ -60,4 +60,6 @@ TODOs:
 
 
 ### Backlog:
+- Ability to handle user uploaded files and databases
 - Answer open-ended questions like "What products do my customers enjoy most?"
+- Connections to GCP and AWS
